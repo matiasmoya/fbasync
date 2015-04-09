@@ -11,7 +11,7 @@
   <% if !signed_in?(:user) %>
     <a class="signin" href="#">Log in with facebook</a>
   <% else %>
-    <a class="signout" href="#">Signout</a>
+    <%=link_to 'Log Out', destroy_user_session_path, method: :delete%>
   <% end %>
 </p>
 

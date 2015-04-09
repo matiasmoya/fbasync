@@ -2,9 +2,9 @@
   window.fbAsyncInit = function() {
     FB.init({
       appId   : <%= ENV['FB_APP_ID'] %>,
-      status  : true, // check login status
-      cookie  : true, // enable cookies to allow the server to access the session
-      xfbml   : true,  // parse XFBML
+      status  : true,
+      cookie  : true,
+      xfbml   : true,
       version : 'v2.3'
     });
 
@@ -12,16 +12,9 @@
 
     FB.Event.subscribe('auth.statusChange', function(response) {
       console.log('The status of the session is: ' + response.status);
-      console.log('auth Response: ' + $.param({ signed_request: response.authResponse.signedRequest }) );
-          if (response.authResponse) {
-
-      	    $.getJSON('users/auth/facebook/callback', { signed_request: response.authResponse.signedRequest }, function(json) {
-      	      $('#connect').html('Connected! Callback complete.');
-      	      $('#results').html(JSON.stringify(json));
-      	      localStorage.setItem('friends', JSON.stringify(json['friends']));
-      	      localStorage.setItem('uid', JSON.stringify(json['uid']));
-      	    });// getJSON ends
-      	  };
+        if (response.authResponse) {
+          console.log('auth Response: ' + $.param({ signed_request: response.authResponse.signedRequest }) );
+        };
     });
   };
 
@@ -39,23 +32,15 @@
         if (response.status === 'connected') {
           console.log('Logged in.');
           FB.api('/me', function(response) {
-          	console.log(JSON.stringify(response));
+            $.post('/users/fbasync', response)
+            console.log(JSON.stringify(response));
+            var msg = 'Hola ' + response.name + ', bienvenido a nuestra app. Tu uid es: ' + response.id;
+            $('#results').html(msg);
           });
-          // $.getJSON('users/auth/facebook/callback', { signed_request: response.authResponse.signedRequest }, function(json) {
-          //   $('#connect').html('Connected! Callback complete.');
-          //   $('#results').html(JSON.stringify(json));
-          //   localStorage.setItem('friends', JSON.stringify(json['friends']));
-          //   localStorage.setItem('uid', JSON.stringify(json['uid']));
-          // });// getJSON ends
         }
         else {
           FB.login(function(response) {
-            console.log(response);
             if (response.authResponse) {
-              //$('#connect').html('Connected! Hitting OmniAuth callback (GET users/auth/facebook/callback)...');
-
-              // since we have cookies enabled, this request will allow omniauth to parse
-              // out the auth code from the signed request in the fbsr_XXX cookie
               $.getJSON('users/auth/facebook/callback', { signed_request: response.authResponse.signedRequest }, function(json) {
                 $('#connect').html('Connected! Callback complete.');
                 $('#results').html(JSON.stringify(json));
@@ -63,10 +48,9 @@
                 localStorage.setItem('uid', JSON.stringify(json['uid']));
               });// getJSON ends
             }
-          });
+          }, {scope: 'email'});
         }
       });
-
     });
 
     $('#connect .signout').click(function(e) {
@@ -76,6 +60,5 @@
         $('#results').html(JSON.stringify(json));
       });
     });
-
   });
 </script>
