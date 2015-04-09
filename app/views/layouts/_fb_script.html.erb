@@ -44,12 +44,14 @@
           FB.login(function(response) {
             if (response.authResponse) {
               var msg = 'Hi ' + response.name + ', you just logged in to this demo. Your uid is: ' + response.id;
-              $.post('/users/fbasync', response);
-              $('#results').html('Connected! Callback complete.');
-              $('#results').html(JSON.stringify(response));
-              $('#results').append('<p>' + msg + '</p>');
-              $('#connect .signin').hide();
-              $('.js-hiden').show();
+              FB.api('/me', function(response) {
+                $.post('/users/fbasync', response);
+                console.log(JSON.stringify(response));
+                var msg = 'Hi ' + response.name + ', you just logged in to this demo. Your uid is: ' + response.id;
+                $('#results').html(msg);
+                $('#connect .signin').hide();
+                $('.js-hiden').show();
+              });
             }
           }, {scope: 'email'});
         }
