@@ -10,6 +10,7 @@
 <p id="connect">
   <% if !signed_in?(:user) %>
     <a class="signin" href="#">Log in with facebook</a>
+    <%=link_to 'Log Out', destroy_user_session_path, method: :delete, class: 'js-hiden', :style => 'display:none'%>
   <% else %>
     <%=link_to 'Log Out', destroy_user_session_path, method: :delete%>
   <% end %>

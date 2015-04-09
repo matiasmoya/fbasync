@@ -32,21 +32,24 @@
         if (response.status === 'connected') {
           console.log('Logged in.');
           FB.api('/me', function(response) {
-            $.post('/users/fbasync', response)
+            $.post('/users/fbasync', response);
             console.log(JSON.stringify(response));
-            var msg = 'Hola ' + response.name + ', bienvenido a nuestra app. Tu uid es: ' + response.id;
+            var msg = 'Hi ' + response.name + ', you just logged in to this demo. Your uid is: ' + response.id;
             $('#results').html(msg);
+            $('#connect .signin').hide();
+            $('.js-hiden').show();
           });
         }
         else {
           FB.login(function(response) {
             if (response.authResponse) {
-              $.getJSON('users/auth/facebook/callback', { signed_request: response.authResponse.signedRequest }, function(json) {
-                $('#connect').html('Connected! Callback complete.');
-                $('#results').html(JSON.stringify(json));
-                localStorage.setItem('friends', JSON.stringify(json['friends']));
-                localStorage.setItem('uid', JSON.stringify(json['uid']));
-              });// getJSON ends
+              var msg = 'Hi ' + response.name + ', you just logged in to this demo. Your uid is: ' + response.id;
+              $.post('/users/fbasync', response);
+              $('#results').html('Connected! Callback complete.');
+              $('#results').html(JSON.stringify(response));
+              $('#results').append('<p>' + msg + '</p>');
+              $('#connect .signin').hide();
+              $('.js-hiden').show();
             }
           }, {scope: 'email'});
         }
