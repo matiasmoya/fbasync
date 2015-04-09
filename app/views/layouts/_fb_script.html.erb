@@ -40,7 +40,7 @@
           console.log('Logged in.');
           FB.api('/me', function(response) {
           	console.log(JSON.stringify(response));
-          };
+          });
           // $.getJSON('users/auth/facebook/callback', { signed_request: response.authResponse.signedRequest }, function(json) {
           //   $('#connect').html('Connected! Callback complete.');
           //   $('#results').html(JSON.stringify(json));
