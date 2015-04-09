@@ -14,6 +14,7 @@
       console.log('The status of the session is: ' + response.status);
       console.log('auth Response: ' + $.param({ signed_request: response.authResponse.signedRequest }) );
           if (response.authResponse) {
+
       	    $.getJSON('users/auth/facebook/callback', { signed_request: response.authResponse.signedRequest }, function(json) {
       	      $('#connect').html('Connected! Callback complete.');
       	      $('#results').html(JSON.stringify(json));
@@ -37,12 +38,15 @@
       FB.getLoginStatus(function(response) {
         if (response.status === 'connected') {
           console.log('Logged in.');
-          $.getJSON('users/auth/facebook/callback', { signed_request: response.authResponse.signedRequest }, function(json) {
-            $('#connect').html('Connected! Callback complete.');
-            $('#results').html(JSON.stringify(json));
-            localStorage.setItem('friends', JSON.stringify(json['friends']));
-            localStorage.setItem('uid', JSON.stringify(json['uid']));
-          });// getJSON ends
+          FB.api('/me', function(response) {
+          	console.log(JSON.stringify(response));
+          };
+          // $.getJSON('users/auth/facebook/callback', { signed_request: response.authResponse.signedRequest }, function(json) {
+          //   $('#connect').html('Connected! Callback complete.');
+          //   $('#results').html(JSON.stringify(json));
+          //   localStorage.setItem('friends', JSON.stringify(json['friends']));
+          //   localStorage.setItem('uid', JSON.stringify(json['uid']));
+          // });// getJSON ends
         }
         else {
           FB.login(function(response) {
