@@ -1,0 +1,16 @@
+<h1>Async FB Login</h1>
+<p>Here im testing how to log in with facebook in a fully asynchronously way. I'm using devise and omniauth-facebook gems for this example. </p>
+<p>More details can be found github</p>
+
+<div id="results">
+  User signed in? <strong><%= signed_in?(:user).to_s %></strong>
+</div>
+
+<p id="connect">
+  <% if !signed_in?(:user) %>
+    <a class="signin" href="#">Log in with facebook</a>
+  <% else %>
+    <a class="signout" href="#">Signout</a>
+  <% end %>
+</p>
+
