@@ -1,4 +1,6 @@
 class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
+  skip_before_action :verify_authenticity_token, if: :json_request?
+
   def facebook
     @user = User.from_omniauth(request.env["omniauth.auth"])
 
@@ -23,5 +25,11 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
       session["devise.facebook_data"] = params
       render :js => "console.log('User was not created... :(');"
     end
+  end
+
+protected
+
+  def json_request?
+    request.format.json?
   end
 end
